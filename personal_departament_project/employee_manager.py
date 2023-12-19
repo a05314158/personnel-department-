@@ -1,4 +1,21 @@
 from employee import Employee
+def display_employee_list(func):
+    def wrapper(manager, *args, **kwargs):
+        employees = manager.employees
+        if employees:
+            print("\nEmployee List:")
+            print("*" * 94)
+            print("| {:<4} | {:<15} | {:<15} | {:<15} | {:<20} | {:<20} |".format("ID", "First Name", "Last Name", "Position", "Phone Number", "Email"))
+            print("*" * 94)
+            for i, employee in enumerate(employees, start=1):
+                print("| {:<4} | {:<15} | {:<15} | {:<15} | {:<20} | {:<20} |".format(i, employee.first_name, employee.last_name, employee.position, employee.phone_number, employee.email))
+            print("*" * 94)
+        else:
+            print("No employees in the list.")
+        return func(manager, *args, **kwargs)
+
+    return wrapper
+
 
 class EmployeeManager:
     def __init__(self, file_path):
@@ -38,9 +55,9 @@ class EmployeeManager:
         self.employees[index] = new_employee
         self.save_data()
 
+    @display_employee_list
     def display_all_employees(self):
-        for i, employee in enumerate(self.employees, start=1):
-            print(f"{i}. {employee.first_name} {employee.last_name}")
+        pass
 
     def get_employee_by_index(self, index):
         return self.employees[index - 1] if 1 <= index <= len(self.employees) else None
