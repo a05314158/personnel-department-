@@ -1,13 +1,16 @@
 from employee import Employee
 from employee_manager import EmployeeManager
-
 def print_menu():
-    print("\nMenu:")
-    print("1. Display all employee data")
-    print("2. Add a new employee")
-    print("3. Remove an employee")
-    print("4. Update employee information")
-    print("0. Exit")
+    print("\n")
+    print("*" * 30)
+    print("| {:<25} |".format("1. Display all employee data"))
+    print("| {:<25} |".format("2. Add a new employee"))
+    print("| {:<25} |".format("3. Remove an employee"))
+    print("| {:<25} |".format("4. Update employee information"))
+    print("| {:<25} |".format("0. Exit"))
+    print("*" * 30)
+
+
 def get_employee_choice(manager):
     manager.display_all_employees()
     choice = input("Select an employee (enter the number): ")
@@ -22,7 +25,6 @@ def main():
         choice = input("Select an option: ")
 
         if choice == "1":
-            print("\nAll employees:")
             manager.display_all_employees()
         elif choice == "2":
             first_name = input("Enter first name: ")
