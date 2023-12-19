@@ -1,5 +1,3 @@
-# employee.py
-
 class Employee:
     def __init__(self, first_name, last_name, middle_name, phone_number, email, address, position):
         self.first_name = first_name
