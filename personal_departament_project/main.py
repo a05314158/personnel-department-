@@ -1,7 +1,8 @@
 from employee import Employee
 from employee_manager import EmployeeManager
+
 def print_menu():
-    print("\n")
+    print("\nMenu:")
     print("*" * 30)
     print("| {:<25} |".format("1. Display all employee data"))
     print("| {:<25} |".format("2. Add a new employee"))
@@ -10,14 +11,13 @@ def print_menu():
     print("| {:<25} |".format("0. Exit"))
     print("*" * 30)
 
-
 def get_employee_choice(manager):
     manager.display_all_employees()
     choice = input("Select an employee (enter the number): ")
     return manager.get_employee_by_index(int(choice))
 
 def main():
-    file_path = "employees.txt"
+    file_path = "employees.json"
     manager = EmployeeManager(file_path)
 
     while True:
@@ -72,4 +72,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
