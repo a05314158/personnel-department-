@@ -1,4 +1,6 @@
+import json
 from employee import Employee
+
 def display_employee_list(func):
     def wrapper(manager, *args, **kwargs):
         employees = manager.employees
@@ -23,24 +25,22 @@ class EmployeeManager:
         self.employees = self.load_data()
 
     def load_data(self):
-        employees = []
         try:
             with open(self.file_path, mode='r', encoding='utf-8') as file:
-                for line in file:
-                    data = line.strip().split(',')
-                    employee = Employee(*data)
-                    employees.append(employee)
-        except FileNotFoundError:
-            pass
+                employees_data = json.load(file)
+                employees = [Employee(**data) for data in employees_data]
+        except (FileNotFoundError, json.JSONDecodeError):
+            employees = []
         return employees
 
     def save_data(self):
+        employees_data = [{"first_name": employee.first_name, "last_name": employee.last_name,
+                           "middle_name": employee.middle_name, "phone_number": employee.phone_number,
+                           "email": employee.email, "address": employee.address, "position": employee.position}
+                          for employee in self.employees]
+
         with open(self.file_path, mode='w', encoding='utf-8') as file:
-            for employee in self.employees:
-                data = [employee.first_name, employee.last_name, employee.middle_name,
-                        employee.phone_number, employee.email, employee.address, employee.position]
-                line = ','.join(data) + '\n'
-                file.write(line)
+            json.dump(employees_data, file, indent=2)
 
     def add_employee(self, employee):
         self.employees.append(employee)
