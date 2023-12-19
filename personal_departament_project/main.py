@@ -8,9 +8,13 @@ def print_menu():
     print("3. Remove an employee")
     print("4. Update employee information")
     print("0. Exit")
+def get_employee_choice(manager):
+    manager.display_all_employees()
+    choice = input("Select an employee (enter the number): ")
+    return manager.get_employee_by_index(int(choice))
 
 def main():
-    file_path = "employees.csv"
+    file_path = "employees.txt"
     manager = EmployeeManager(file_path)
 
     while True:
@@ -34,32 +38,30 @@ def main():
 
             print("Employee successfully added.")
         elif choice == "3":
-            last_name = input("Enter the last name of the employee you want to remove: ")
-            for employee in manager.employees:
-                if employee.last_name == last_name:
-                    manager.remove_employee(employee)
-                    print(f"Employee {last_name} successfully removed.")
-                    break
+            employee_to_remove = get_employee_choice(manager)
+            if employee_to_remove:
+                manager.remove_employee(employee_to_remove)
+                print(f"Employee {employee_to_remove.first_name} {employee_to_remove.last_name} successfully removed.")
             else:
-                print(f"Employee with last name {last_name} not found.")
+                print("Invalid choice. Please select a valid employee.")
         elif choice == "4":
-            last_name = input("Enter the last name of the employee whose information you want to update: ")
-            for employee in manager.employees:
-                if employee.last_name == last_name:
-                    first_name = input("Enter new first name: ")
-                    middle_name = input("Enter new middle name: ")
-                    phone_number = input("Enter new phone number: ")
-                    email = input("Enter new email address: ")
-                    address = input("Enter new address: ")
-                    position = input("Enter new position: ")
+            employee_to_update = get_employee_choice(manager)
+            if employee_to_update:
+                first_name = input("Enter new first name: ")
+                middle_name = input("Enter new middle name: ")
+                phone_number = input("Enter new phone number: ")
+                email = input("Enter new email address: ")
+                address = input("Enter new address: ")
+                position = input("Enter new position: ")
 
-                    new_info = Employee(first_name, last_name, middle_name, phone_number, email, address, position)
-                    manager.update_employee(employee, new_info)
+                new_info = Employee(first_name, employee_to_update.last_name, middle_name,
+                                    phone_number, email, address, position)
+                manager.update_employee(employee_to_update, new_info)
 
-                    print(f"Information for employee {last_name} successfully updated.")
-                    break
+                print(f"Information for employee {employee_to_update.first_name} {employee_to_update.last_name} "
+                      f"successfully updated.")
             else:
-                print(f"Employee with last name {last_name} not found.")
+                print("Invalid choice. Please select a valid employee.")
         elif choice == "0":
             print("Exiting the program.")
             break
@@ -68,3 +70,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
