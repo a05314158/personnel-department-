@@ -1,5 +1,3 @@
-# employee_manager.py
-import csv
 from employee import Employee
 
 class EmployeeManager:
@@ -10,22 +8,22 @@ class EmployeeManager:
     def load_data(self):
         employees = []
         try:
-            with open(self.file_path, mode='r', newline='', encoding='utf-8') as file:
-                reader = csv.DictReader(file)
-                for row in reader:
-                    employee = Employee(**row)
+            with open(self.file_path, mode='r', encoding='utf-8') as file:
+                for line in file:
+                    data = line.strip().split(',')
+                    employee = Employee(*data)
                     employees.append(employee)
         except FileNotFoundError:
             pass
         return employees
 
     def save_data(self):
-        with open(self.file_path, mode='w', newline='', encoding='utf-8') as file:
-            fieldnames = ['first_name', 'last_name', 'middle_name', 'phone_number', 'email', 'address', 'position']
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
+        with open(self.file_path, mode='w', encoding='utf-8') as file:
             for employee in self.employees:
-                writer.writerow(vars(employee))
+                data = [employee.first_name, employee.last_name, employee.middle_name,
+                        employee.phone_number, employee.email, employee.address, employee.position]
+                line = ','.join(data) + '\n'
+                file.write(line)
 
     def add_employee(self, employee):
         self.employees.append(employee)
@@ -41,6 +39,8 @@ class EmployeeManager:
         self.save_data()
 
     def display_all_employees(self):
-        for employee in self.employees:
-            employee.display_info()
-            print("-------------")
+        for i, employee in enumerate(self.employees, start=1):
+            print(f"{i}. {employee.first_name} {employee.last_name}")
+
+    def get_employee_by_index(self, index):
+        return self.employees[index - 1] if 1 <= index <= len(self.employees) else None
