@@ -1,6 +1,10 @@
+import json
+import telebot
+import subprocess
 from employee import Employee
 from employee_manager import EmployeeManager
-
+from telegram_bot import bot as telegram_bot
+print('da')
 def print_menu():
     print("\nMenu:")
     print("*" * 30)
@@ -8,6 +12,7 @@ def print_menu():
     print("| {:<25} |".format("2. Add a new employee"))
     print("| {:<25} |".format("3. Remove an employee"))
     print("| {:<25} |".format("4. Update employee information"))
+    print("| {:<25} |".format("5. Launch Telegram Bot"))
     print("| {:<25} |".format("0. Exit"))
     print("*" * 30)
 
@@ -15,6 +20,12 @@ def get_employee_choice(manager):
     manager.display_all_employees()
     choice = input("Select an employee (enter the number): ")
     return manager.get_employee_by_index(int(choice))
+
+def start_telegram_bot():
+    try:
+        subprocess.run(["python", "telegram_bot.py"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error launching Telegram Bot: {e}")
 
 def main():
     file_path = "employees.json"
@@ -62,13 +73,22 @@ def main():
 
                 print(f"Information for employee {employee_to_update.first_name} {employee_to_update.last_name} "
                       f"successfully updated.")
+            elif choice == "5":
+                def start_telegram_bot():
+                    try:
+                        process = subprocess.Popen(["python", "telegram_bot.py"], stdout=subprocess.PIPE,
+                                                   stderr=subprocess.PIPE)
+                        stdout, stderr = process.communicate()
+                        print(stdout.decode())
+                        print(stderr.decode())
+                    except subprocess.CalledProcessError as e:
+                        print(f"Error launching Telegram Bot: {e}")
+
+            elif choice == "0":
+                print("Exiting the program.")
+                break
             else:
-                print("Invalid choice. Please select a valid employee.")
-        elif choice == "0":
-            print("Exiting the program.")
-            break
-        else:
-            print("Invalid input. Please select a valid menu option.")
+                print("Invalid input. Please select a valid menu option.")
 
 if __name__ == "__main__":
     main()
