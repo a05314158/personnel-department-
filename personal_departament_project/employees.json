@@ -1,0 +1,4 @@
+[
+    {"first_name": "John", "last_name": "Doe", "middle_name": "M", "phone_number": "123456789", "email": "john.doe@example.com", "address": "123 Main St", "position": "Manager"},
+    {"first_name": "Jane", "last_name": "Smith", "middle_name": "S", "phone_number": "987654321", "email": "jane.smith@example.com", "address": "456 Oak St", "position": "Developer"}
+]
