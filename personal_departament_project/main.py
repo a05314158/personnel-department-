@@ -3,8 +3,26 @@ import telebot
 import subprocess
 from employee import Employee
 from employee_manager import EmployeeManager
-from telegram_bot import bot as telegram_bot
-print('da')
+
+    # Telegram Bot code
+with open("employees.json", "r") as json_file:
+    data = json.load(json_file)
+
+bot_token = "6988414131:AAF1LQxI1ht2X1DSNYSIFtURvf5mJMfV4AE"
+bot = telebot.TeleBot(bot_token)
+
+@bot.message_handler(func=lambda message: True)
+def handle_messages(message):
+    if message.text.lower() == "get_data":
+        response = ""
+        for item in data["dat`a"]:
+            response += f"ID: {item['id']}, Name: {item['name']}\n"
+        bot.send_message(message.chat.id, response)
+    else:
+        bot.send_message(message.chat.id, "I only understand the 'get_data' command.")
+
+bot.polling(none_stop=True)
+
 def print_menu():
     print("\nMenu:")
     print("*" * 30)
@@ -73,22 +91,15 @@ def main():
 
                 print(f"Information for employee {employee_to_update.first_name} {employee_to_update.last_name} "
                       f"successfully updated.")
-            elif choice == "5":
-                def start_telegram_bot():
-                    try:
-                        process = subprocess.Popen(["python", "telegram_bot.py"], stdout=subprocess.PIPE,
-                                                   stderr=subprocess.PIPE)
-                        stdout, stderr = process.communicate()
-                        print(stdout.decode())
-                        print(stderr.decode())
-                    except subprocess.CalledProcessError as e:
-                        print(f"Error launching Telegram Bot: {e}")
+        elif choice == "5":
+            start_telegram_bot()
+        elif choice == "0":
+            print("Exiting the program.")
+            break
+        else:
+            print("Invalid input. Please select a valid menu option.")
 
-            elif choice == "0":
-                print("Exiting the program.")
-                break
-            else:
-                print("Invalid input. Please select a valid menu option.")
+# if __name__ == "__main__":
+#     main()
 
-if __name__ == "__main__":
-    main()
+
