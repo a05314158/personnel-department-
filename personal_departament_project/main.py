@@ -1,38 +1,19 @@
 import json
-import telebot
 import subprocess
 from employee import Employee
 from employee_manager import EmployeeManager
-
-    # Telegram Bot code
-with open("employees.json", "r") as json_file:
-    data = json.load(json_file)
-
-bot_token = "6988414131:AAF1LQxI1ht2X1DSNYSIFtURvf5mJMfV4AE"
-bot = telebot.TeleBot(bot_token)
-
-@bot.message_handler(func=lambda message: True)
-def handle_messages(message):
-    if message.text.lower() == "get_data":
-        response = ""
-        for item in data["dat`a"]:
-            response += f"ID: {item['id']}, Name: {item['name']}\n"
-        bot.send_message(message.chat.id, response)
-    else:
-        bot.send_message(message.chat.id, "I only understand the 'get_data' command.")
-
-bot.polling(none_stop=True)
-
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
 def print_menu():
-    print("\nMenu:")
-    print("*" * 30)
-    print("| {:<25} |".format("1. Display all employee data"))
-    print("| {:<25} |".format("2. Add a new employee"))
-    print("| {:<25} |".format("3. Remove an employee"))
-    print("| {:<25} |".format("4. Update employee information"))
-    print("| {:<25} |".format("5. Launch Telegram Bot"))
-    print("| {:<25} |".format("0. Exit"))
-    print("*" * 30)
+    print("\n")
+    print("*" * 37)
+    print("| {:<33} |".format("1. Display all employee data"))
+    print("| {:<33} |".format("2. Add a new employee"))
+    print("| {:<33} |".format("3. Remove an employee"))
+    print("| {:<33} |".format("4. Update employee information"))
+    print("| {:<33} |".format("5. Launch Telegram Bot"))
+    print("| {:<33} |".format("0. Exit"))
+    print("*" * 37)
 
 def get_employee_choice(manager):
     manager.display_all_employees()
@@ -92,14 +73,47 @@ def main():
                 print(f"Information for employee {employee_to_update.first_name} {employee_to_update.last_name} "
                       f"successfully updated.")
         elif choice == "5":
-            start_telegram_bot()
+            import json
+            from telegram import Update
+            from telegram.ext import Updater, CommandHandler, CallbackContext
+
+            with open('employees.json', 'r', encoding='utf-8') as file:
+                data = json.load(file)
+
+            def get_data(update: Update, context: CallbackContext) -> None:
+                chat_id = update.message.chat_id
+                response = "Data from JSON file:\n"
+
+                for item in data:
+                    response += f"ID: {item['id']}\n"
+                    response += f"First Name: {item['first_name']}\n"
+                    response += f"Last Name: {item['last_name']}\n"
+                    response += f"Middle Name: {item['middle_name']}\n"
+                    response += f"Phone Number: {item['phone_number']}\n"
+                    response += f"Email: {item['email']}\n"
+                    response += f"Address: {item['address']}\n"
+                    response += f"Position: {item['position']}\n\n"
+
+                context.bot.send_message(chat_id=chat_id, text=response)
+
+            def start(update: Update, context: CallbackContext) -> None:
+                chat_id = update.message.chat_id
+                context.bot.send_message(chat_id=chat_id, text="Bot is running!")
+
+            def main() -> None:
+                updater = Updater(token='6988414131:AAF1LQxI1ht2X1DSNYSIFtURvf5mJMfV4AE', use_context=True)
+                dp = updater.dispatcher
+                dp.add_handler(CommandHandler("start", start))
+                dp.add_handler(CommandHandler("getdata", get_data))
+                updater.start_polling()
+                updater.idle()
+
+
         elif choice == "0":
             print("Exiting the program.")
             break
         else:
             print("Invalid input. Please select a valid menu option.")
 
-# if __name__ == "__main__":
-#     main()
-
-
+if __name__ == "__main__":
+    main()
