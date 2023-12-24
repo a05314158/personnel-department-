@@ -18,7 +18,6 @@ def display_employee_list(func):
 
     return wrapper
 
-
 class EmployeeManager:
     def __init__(self, file_path):
         self.file_path = file_path
@@ -34,7 +33,7 @@ class EmployeeManager:
         return employees
 
     def save_data(self):
-        employees_data = [{"first_name": employee.first_name, "last_name": employee.last_name,
+        employees_data = [{"id": employee.id, "first_name": employee.first_name, "last_name": employee.last_name,
                            "middle_name": employee.middle_name, "phone_number": employee.phone_number,
                            "email": employee.email, "address": employee.address, "position": employee.position}
                           for employee in self.employees]
@@ -43,6 +42,7 @@ class EmployeeManager:
             json.dump(employees_data, file, indent=2)
 
     def add_employee(self, employee):
+        employee.id = len(self.employees) + 1  # Assign a unique ID
         self.employees.append(employee)
         self.save_data()
 
