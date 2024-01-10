@@ -1,5 +1,6 @@
 class Employee:
-    def __init__(self, id=None, first_name="", last_name="", middle_name="", phone_number="", email="", address="", position=""):
+    def __init__(self, id: int = None, first_name: str = "", last_name: str = "", middle_name: str = "",
+                 phone_number: str = "", email: str = "", address: str = "", position: str = ""):
         self.id = id
         self.first_name = first_name
         self.last_name = last_name
