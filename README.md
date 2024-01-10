@@ -2,6 +2,8 @@ Employee Management System
 Overview
 The Employee Management System is a command-line application designed to streamline the management of employee data within an organization. It provides functionalities such as adding new employees, updating their information, and displaying a sorted list based on last names.
 
+if you want start programm. Start main faile 
+
 Project Structure
 The project consists of three main files:
 
