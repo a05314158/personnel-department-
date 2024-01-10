@@ -1,48 +1,44 @@
+import json
 from employee import Employee
 
 def display_employee_list(func):
-    def wrapper(manager, *args, **kwargs):
+    def wrapper(manager):
         employees = manager.employees
         if employees:
-            func(manager, *args, **kwargs)
+            func(manager)
         else:
             print("No employees in the list.")
     return wrapper
 
 class EmployeeManager:
-    def __init__(self, file_path):
+    def __init__(self, file_path: str):
         self.file_path = file_path
         self.employees = self.load_data()
 
     def load_data(self):
-        employees = []
         try:
             with open(self.file_path, mode='r', encoding='utf-8') as file:
-                for line in file:
-                    data = line.strip().split(',')
-                    employee = Employee(*data)
-                    employees.append(employee)
-        except FileNotFoundError:
-            print("File not found. Creating a new one.")
+                data = json.load(file)
+                employees = [Employee(**employee_data) for employee_data in data]
+        except (FileNotFoundError, json.JSONDecodeError):
+            print("File not found or invalid JSON format. Creating a new one.")
+            employees = []
         return employees
 
     def save_data(self):
         with open(self.file_path, mode='w', encoding='utf-8') as file:
-            for employee in self.employees:
-                data = [employee.first_name, employee.last_name, employee.middle_name,
-                        employee.phone_number, employee.email, employee.address, employee.position]
-                line = ','.join(data) + '\n'
-                file.write(line)
+            data = [employee.__dict__ for employee in self.employees]
+            json.dump(data, file, ensure_ascii=False, indent=2)
 
-    def add_employee(self, employee):
+    def add_employee(self, employee: Employee):
         self.employees.append(employee)
         self.save_data()
 
-    def remove_employee(self, employee):
+    def remove_employee(self, employee: Employee):
         self.employees.remove(employee)
         self.save_data()
 
-    def update_employee_info(self, employee):
+    def update_employee_info(self, employee: Employee):
         print(f"Updating information for {employee.first_name} {employee.last_name}")
         employee.phone_number = input("Enter new phone number: ")
         employee.email = input("Enter new email address: ")
@@ -55,7 +51,7 @@ class EmployeeManager:
         self.employees = sorted(self.employees, key=lambda x: x.last_name)
         self.display_all_employees()
 
-    def get_employee_by_index(self, index):
+    def get_employee_by_index(self, index: int):
         return self.employees[index - 1] if 1 <= index <= len(self.employees) else None
 
     @display_employee_list
