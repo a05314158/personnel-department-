@@ -2,16 +2,16 @@ from employee import Employee
 from employee_manager import EmployeeManager
 
 def print_menu():
-    print("\n" + "*" * 30)
-    print("| {:<25} |".format("1. Display all employee data"))
-    print("| {:<25} |".format("2. Add a new employee"))
-    print("| {:<25} |".format("3. Remove an employee"))
-    print("| {:<25} |".format("4. Update employee information"))
-    print("| {:<25} |".format("5. Sort employees by last name"))
-    print("| {:<25} |".format("0. Exit"))
-    print("*" * 30)
+    print("\n" + "*" * 35)
+    print("| {:<31} |".format("1. Display all employee data"))
+    print("| {:<31} |".format("2. Add a new employee"))
+    print("| {:<31} |".format("3. Remove an employee"))
+    print("| {:<31} |".format("4. Update employee information"))
+    print("| {:<31} |".format("5. Sort employees by last name"))
+    print("| {:<31} |".format("0. Exit"))
+    print("*" * 35)
 
-def get_validated_input(prompt, validator_func):
+def get_validated_input(prompt: str, validator_func):
     while True:
         user_input = input(prompt)
         if validator_func(user_input):
@@ -19,8 +19,11 @@ def get_validated_input(prompt, validator_func):
         else:
             print("Invalid input. Please try again.")
 
+def is_valid_phone_number(input_str: str) -> bool:
+    return input_str.isdigit() and len(input_str) == 10
+
 def main():
-    file_path = "employees.txt"
+    file_path = "employees.json"
     manager = EmployeeManager(file_path)
 
     while True:
@@ -32,7 +35,7 @@ def main():
         elif user_choice == "2":
             first_name = get_validated_input("Enter first name: ", lambda x: x.isalpha())
             last_name = get_validated_input("Enter last name: ", lambda x: x.isalpha())
-            phone_number = get_validated_input("Enter phone number: ", lambda x: x.isdigit() and len(x) == 10)
+            phone_number = get_validated_input("Enter phone number: ", is_valid_phone_number)
             email = get_validated_input("Enter email address: ", lambda x: "@" in x and "." in x)
             address = input("Enter address: ")
             position = input("Enter position: ")
